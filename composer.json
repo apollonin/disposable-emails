@@ -1,0 +1,12 @@
+{
+    "name": "hostinger/disposable-emails",
+    "description": "List of disposable emails",
+    "keywords": ["email", "check", "throwaway", "disposable"],
+    "license": "MIT",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Hostinger\\": "."
+        }
+    }
+}
