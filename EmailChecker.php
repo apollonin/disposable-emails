@@ -24,7 +24,7 @@ class EmailChecker
         }
 
         $domains = $this->getDomains();
-        if(in_array($domain, $domains)) {
+        if (in_array($domain, $domains)) {
             return false;
         }
 
@@ -32,8 +32,11 @@ class EmailChecker
         if (is_array($mxs)) {
             $mx_info = $mxs[array_rand($mxs)];
             $mx_host = $mx_info['target'];
+            if (in_array($mx_host, $domains)) {
+                return false;
+            }
             $mx = substr($mx_host, ($pos = strpos($mx_host, '.')) !== false ? $pos + 1 : 0);
-            if(in_array($mx, $domains)) {
+            if (in_array($mx, $domains)) {
                 return false;
             }
         }
@@ -44,6 +47,5 @@ class EmailChecker
     public function getDomains()
     {
         return json_decode(file_get_contents(__DIR__ . '/blacklist.json'));
-
     }
 }
