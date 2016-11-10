@@ -20,7 +20,7 @@ class EmailChecker
      */
     public function isValid($email)
     {
-        if (strlen($email) > 254 ){
+        if (strlen($email) > 254) {
             return false;
         }
 
@@ -73,6 +73,9 @@ class EmailChecker
 
     public function execEnabled()
     {
+        if (!function_exists('exec')) {
+            return false;
+        }
         $disabled = explode(',', ini_get('disable_functions'));
         return !in_array('exec', $disabled);
     }
@@ -94,13 +97,13 @@ class EmailChecker
         }
 
         foreach ($lines as $line) {
-            $mxInfo   = explode(' ', preg_replace('!\s+!', ' ', $line));
+            $mxInfo = explode(' ', preg_replace('!\s+!', ' ', $line));
             $output[] = [
-                'host'   => $mxInfo[0],
-                'ttl'    => $mxInfo[1],
-                'class'  => $mxInfo[2],
-                'type'   => $mxInfo[3],
-                'pri'    => $mxInfo[4],
+                'host' => $mxInfo[0],
+                'ttl' => $mxInfo[1],
+                'class' => $mxInfo[2],
+                'type' => $mxInfo[3],
+                'pri' => $mxInfo[4],
                 'target' => $mxInfo[5],
             ];
         }
