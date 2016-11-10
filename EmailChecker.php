@@ -28,7 +28,7 @@ class EmailChecker
             return false;
         }
 
-        $mxs = dns_get_record($domain, DNS_MX);
+        $mxs = $this->getMxsRecords($domain);
         if (empty($mxs)) {
             return false;
         }
@@ -49,5 +49,36 @@ class EmailChecker
     public function getDomains()
     {
         return json_decode(file_get_contents(__DIR__ . '/blacklist.json'));
+    }
+
+    public function getMxsRecords($domain)
+    {
+        if ($this->exec_enabled()) {
+            exec("dig +noall +answer MX " . escapeshellarg($domain), $lines);
+            $output = [];
+            if (empty($lines)) {
+                return $output;
+            }
+            foreach ($lines as $line) {
+                $mxInfo   = explode(' ', preg_replace('!\s+!', ' ', $lines[0]));
+                $output[] = [
+                    'host'   => $mxInfo[0],
+                    'ttl'    => $mxInfo[1],
+                    'class'  => $mxInfo[2],
+                    'type'   => $mxInfo[3],
+                    'pri'    => $mxInfo[4],
+                    'target' => $mxInfo[5],
+                ];
+            }
+            return $output;
+        }
+        return dns_get_record($domain, DNS_MX);
+
+    }
+
+    function exec_enabled()
+    {
+        $disabled = explode(',', ini_get('disable_functions'));
+        return !in_array('exec', $disabled);
     }
 }
