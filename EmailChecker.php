@@ -96,6 +96,10 @@ class EmailChecker
             return $output;
         }
 
+        if (strpos($lines[0], 'connection timed out') !== FALSE){
+            return $output;
+        }
+
         foreach ($lines as $line) {
             $mxInfo = explode(' ', preg_replace('!\s+!', ' ', $line));
             $output[] = [

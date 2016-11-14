@@ -45,6 +45,17 @@ class EmailCheckerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([], $result);
     }
 
+    public function testGetMxRecordWithDigCmd_Timeout()
+    {
+        $exec = $this->getFunctionMock('Hostinger', 'exec');
+        $digTimeoutMessage = ';; connection timed out; no servers could be reached';
+        $exec->expects($this->once())->willReturn([$digTimeoutMessage]);
+
+        $domain = 'hello.me';
+        $result = $this->emailChecker->getMxRecordWithDigCmd($domain);
+        $this->assertEquals([], $result);
+    }
+
     public function testGetMxRecordWithDigCmd()
     {
         $exec = $this->getFunctionMock('Hostinger', 'exec');
