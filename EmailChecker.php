@@ -102,6 +102,11 @@ class EmailChecker
 
         foreach ($lines as $line) {
             $mxInfo = explode(' ', preg_replace('!\s+!', ' ', $line));
+
+            if ($mxInfo[3] != 'MX'){
+                continue;
+            }
+
             $output[] = [
                 'host' => $mxInfo[0],
                 'ttl' => $mxInfo[1],
